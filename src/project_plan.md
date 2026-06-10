@@ -19,6 +19,16 @@ The goal of this project is to build a comprehensive stock market analyzer that 
 5. **Alert System**
    - Set up an alert system that notifies users of significant price movements or trends.
 
+## Prioritized Features
+1. **Real-time Data Integration**
+   - Integrate real-time stock price data from APIs like Alpha Vantage or Yahoo Finance.
+   
+2. **Historical Data Analysis**
+   - Provide tools for analyzing historical stock prices, including trends, moving averages, and volume analysis.
+   
+3. **Predictive Analytics**
+   - Implement machine learning models to predict future stock prices based on historical data.
+
 ## Milestones
 1. **Week 1: Planning and Research**
    - Define project scope and requirements.
