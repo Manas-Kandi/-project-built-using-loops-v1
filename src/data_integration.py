@@ -38,8 +38,8 @@ def integrate_predictive_data(symbols, start_date, end_date):
         future_dates = pd.date_range(end=end_date, periods=30, closed='right')
         predictive_data = perform_predictive_analysis(historical_prices, future_dates)
         predictive_prices[symbol] = {
-            'Predicted Prices': predictive_data['Random Forest Model']['Predicted Prices'],
-            'Model': predictive_data['Random Forest Model']
+            'Predicted Prices': predictive_data['Neural Network Model']['Predicted Prices'],
+            'Model': predictive_data['Neural Network Model']
         }
     
     return predictive_prices
