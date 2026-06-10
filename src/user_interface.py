@@ -11,7 +11,7 @@ def main_menu():
     print("5. Calculate Moving Averages for Historical Stock Prices")
     print("6. Analyze Stock Volumes for Historical Data")
     print("7. Visualize Real-time Stock Prices")
-    print("8. Set Alerts Based on Significant Price Movements or Trends")
+    print("8. Set Customizable Alerts Based on Significant Price Movements or Trends")
     print("9. Exit")
 
 def integrate_real_time_data():
@@ -89,11 +89,17 @@ def analyze_volume(data):
         'Average Volume': data['Volume'].mean()
     }
 
-def set_alerts(symbol, historical_data, threshold=1.0):
+def set_customizable_alerts(symbol, historical_data, threshold=1.0, alert_type='price_movement'):
     latest_price = historical_data['Close'][-1]
     moving_average = calculate_moving_average(historical_data)
-    if abs(latest_price - moving_average) > threshold * moving_average:
-        print(f"Alert: Significant price movement detected for {symbol}! Latest Price: {latest_price}, Moving Average: {moving_average}")
+    
+    if alert_type == 'price_movement':
+        if abs(latest_price - moving_average) > threshold * moving_average:
+            print(f"Alert: Significant price movement detected for {symbol}! Latest Price: {latest_price}, Moving Average: {moving_average}")
+    elif alert_type == 'trend_change':
+        trend = calculate_trend(historical_data)
+        if abs(trend) > threshold:
+            print(f"Alert: Significant trend change detected for {symbol}! Trend: {trend}")
 
 def set_notifications(symbol, historical_data, threshold=1.0):
     latest_price = historical_data['Close'][-1]
@@ -156,10 +162,10 @@ if __name__ == "__main__":
             start_date = pd.to_datetime(input("Enter start date in YYYY-MM-DD format: "))
             end_date = pd.to_datetime(input("Enter end date in YYYY-MM-DD format: "))
             threshold = float(input("Enter threshold for significant price movement (default is 1.0): ") or 1.0)
+            alert_type = input("Enter alert type ('price_movement' or 'trend_change'): ")
             historical_data = integrate_historical_data(symbols, start_date, end_date)
             for symbol in symbols:
-                set_alerts(symbol, historical_data[symbol], threshold)
-                set_notifications(symbol, historical_data[symbol], threshold)
+                set_customizable_alerts(symbol, historical_data[symbol], threshold, alert_type)
         elif choice == '9':
             break
         else:
