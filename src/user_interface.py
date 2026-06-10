@@ -95,6 +95,12 @@ def set_alerts(symbol, historical_data, threshold=1.0):
     if abs(latest_price - moving_average) > threshold * moving_average:
         print(f"Alert: Significant price movement detected for {symbol}! Latest Price: {latest_price}, Moving Average: {moving_average}")
 
+def set_notifications(symbol, historical_data, threshold=1.0):
+    latest_price = historical_data['Close'][-1]
+    moving_average = calculate_moving_average(historical_data)
+    if abs(latest_price - moving_average) > threshold * moving_average:
+        print(f"Notification: Significant price movement detected for {symbol}! Latest Price: {latest_price}, Moving Average: {moving_average}")
+
 if __name__ == "__main__":
     while True:
         main_menu()
@@ -153,6 +159,7 @@ if __name__ == "__main__":
             historical_data = integrate_historical_data(symbols, start_date, end_date)
             for symbol in symbols:
                 set_alerts(symbol, historical_data[symbol], threshold)
+                set_notifications(symbol, historical_data[symbol], threshold)
         elif choice == '9':
             break
         else:
