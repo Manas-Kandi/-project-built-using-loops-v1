@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, StackingRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
 
 def prepare_data(historical_data):
     historical_data['Date'] = pd.to_datetime(historical_data['Date'])
@@ -11,6 +12,12 @@ def prepare_data(historical_data):
     features = ['Open', 'High', 'Low', 'Close', 'Volume']
     X = historical_data[features]
     y = historical_data['Close']
+    
+    # Add technical indicators
+    X['SMA_50'] = X['Close'].rolling(window=50).mean()
+    X['SMA_200'] = X['Close'].rolling(window=200).mean()
+    X['RSI'] = calculate_relative_strength_index(historical_data)['Relative Strength Index']
+    
     return X, y
 
 def train_linear_regression(X, y):
@@ -35,19 +42,26 @@ def train_gradient_boosting(X, y):
     return grid_search.fit(X, y)
 
 def train_neural_network(X, y):
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
     param_grid = {
         'hidden_layer_sizes': [(10,), (50,), (100,)],
         'max_iter': [200, 500, 1000]
     }
     grid_search = GridSearchCV(MLPRegressor(random_state=42), param_grid, cv=3)
-    return grid_search.fit(X, y)
+    return grid_search.fit(X_scaled, y)
 
 def train_stacking_regressor(models):
     stack_model = StackingRegressor(estimators=models, final_estimator=RandomForestRegressor())
     return stack_model.fit(X, y)
 
-def predict_future_prices(model, future_dates):
-    future_X = future_dates.values.reshape(-1, 1)
+def predict_future_prices(model, future_dates, X_scaler=None):
+    if X_scaler:
+        future_X = X_scaler.transform(future_dates)
+    else:
+        future_X = future_dates.values.reshape(-1, 1)
+    
     predicted_prices = model.predict(future_X)
     return pd.Series(predicted_prices, index=future_dates)
 
@@ -91,3 +105,11 @@ def perform_predictive_analysis(historical_data, future_dates):
     return {
         best_model_name: {'Predicted Prices': predicted_prices}
     }
+
+def calculate_relative_strength_index(data, window=14):
+    delta = data['Close'].diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+    rs = gain / loss
+    rsi = 100 - (100 / (1 + rs))
+    return rsi

@@ -32,20 +32,3 @@ def analyze_volume(data):
         'Volume': data['Volume'].sum(),
         'Average Volume': data['Volume'].mean()
     }
-
-def perform_historical_analysis(historical_data):
-    trend = calculate_trend(historical_data)
-    moving_average = calculate_moving_average(historical_data)
-    exponential_moving_average = calculate_exponential_moving_average(historical_data)
-    relative_strength_index = calculate_relative_strength_index(historical_data)
-    bollinger_bands = calculate_bollinger_bands(historical_data)
-    volume_analysis = analyze_volume(historical_data)
-    
-    return {
-        'Trend': trend,
-        'Moving Average': moving_average,
-        'Exponential Moving Average': exponential_moving_average,
-        'Relative Strength Index': relative_strength_index,
-        'Bollinger Bands': bollinger_bands,
-        'Volume Analysis': volume_analysis
-    }
