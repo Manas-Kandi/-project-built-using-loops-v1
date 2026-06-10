@@ -1,5 +1,6 @@
 import argparse
 import matplotlib.pyplot as plt
+from datetime import timedelta
 
 def main_menu():
     print("Stock Market Analyzer")
@@ -10,7 +11,8 @@ def main_menu():
     print("5. Calculate Moving Averages for Historical Stock Prices")
     print("6. Analyze Stock Volumes for Historical Data")
     print("7. Visualize Real-time Stock Prices")
-    print("8. Exit")
+    print("8. Set Alerts Based on Significant Price Movements or Trends")
+    print("9. Exit")
 
 def integrate_real_time_data():
     symbols = ['AAPL', 'GOOGL', 'MSFT']
@@ -87,10 +89,16 @@ def analyze_volume(data):
         'Average Volume': data['Volume'].mean()
     }
 
+def set_alerts(symbol, historical_data, threshold=1.0):
+    latest_price = historical_data['Close'][-1]
+    moving_average = calculate_moving_average(historical_data)
+    if abs(latest_price - moving_average) > threshold * moving_average:
+        print(f"Alert: Significant price movement detected for {symbol}! Latest Price: {latest_price}, Moving Average: {moving_average}")
+
 if __name__ == "__main__":
     while True:
         main_menu()
-        choice = input("Enter your choice (1-8): ")
+        choice = input("Enter your choice (1-9): ")
         
         if choice == '1':
             real_time_prices = integrate_real_time_data()
@@ -138,6 +146,14 @@ if __name__ == "__main__":
             real_time_prices = integrate_real_time_data()
             plot_real_time_prices(real_time_prices)
         elif choice == '8':
+            symbols = input("Enter stock symbols separated by commas: ").split(',')
+            start_date = pd.to_datetime(input("Enter start date in YYYY-MM-DD format: "))
+            end_date = pd.to_datetime(input("Enter end date in YYYY-MM-DD format: "))
+            threshold = float(input("Enter threshold for significant price movement (default is 1.0): ") or 1.0)
+            historical_data = integrate_historical_data(symbols, start_date, end_date)
+            for symbol in symbols:
+                set_alerts(symbol, historical_data[symbol], threshold)
+        elif choice == '9':
             break
         else:
             print("Invalid choice. Please try again.")
