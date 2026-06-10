@@ -2,8 +2,7 @@ from .real_time_data import get_real_time_stock_price
 from .data_analysis import perform_historical_analysis
 from .predictive_analytics import perform_predictive_analysis
 
-def integrate_real_time_data():
-    symbols = ['AAPL', 'GOOGL', 'MSFT']
+def integrate_real_time_data(symbols):
     prices = {symbol: get_real_time_stock_price(symbol) for symbol in symbols}
     return prices
 
@@ -45,9 +44,10 @@ def integrate_predictive_data(symbols, start_date, end_date):
     return predictive_prices
 
 if __name__ == "__main__":
-    real_time_prices = integrate_real_time_data()
-    historical_prices = integrate_historical_data(['AAPL'], pd.to_datetime('2023-01-01'), pd.to_datetime('2023-01-31'))
-    predictive_prices = integrate_predictive_data(['AAPL'], pd.to_datetime('2023-01-01'), pd.to_datetime('2023-01-31'))
+    symbols = ['AAPL', 'GOOGL', 'MSFT']
+    real_time_prices = integrate_real_time_data(symbols)
+    historical_prices = integrate_historical_data(symbols, pd.to_datetime('2023-01-01'), pd.to_datetime('2023-01-31'))
+    predictive_prices = integrate_predictive_data(symbols, pd.to_datetime('2023-01-01'), pd.to_datetime('2023-01-31'))
     
     print(real_time_prices)
     print(historical_prices)

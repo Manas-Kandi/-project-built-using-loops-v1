@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error
@@ -15,27 +15,32 @@ def prepare_data(historical_data):
 
 def train_linear_regression(X, y):
     model = LinearRegression()
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    model.fit(X_train, y_train)
-    return model
+    return model.fit(X, y)
 
 def train_random_forest(X, y):
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    model.fit(X_train, y_train)
-    return model
+    param_grid = {
+        'n_estimators': [50, 100, 200],
+        'max_depth': [None, 10, 20, 30]
+    }
+    grid_search = GridSearchCV(RandomForestRegressor(random_state=42), param_grid, cv=3)
+    return grid_search.fit(X, y)
 
 def train_gradient_boosting(X, y):
-    model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    model.fit(X_train, y_train)
-    return model
+    param_grid = {
+        'n_estimators': [50, 100, 200],
+        'learning_rate': [0.01, 0.1, 0.2],
+        'max_depth': [3, 5, 7]
+    }
+    grid_search = GridSearchCV(GradientBoostingRegressor(random_state=42), param_grid, cv=3)
+    return grid_search.fit(X, y)
 
 def train_neural_network(X, y):
-    model = MLPRegressor(hidden_layer_sizes=(100,), max_iter=500, random_state=42)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    model.fit(X_train, y_train)
-    return model
+    param_grid = {
+        'hidden_layer_sizes': [(10,), (50,), (100,)],
+        'max_iter': [200, 500, 1000]
+    }
+    grid_search = GridSearchCV(MLPRegressor(random_state=42), param_grid, cv=3)
+    return grid_search.fit(X, y)
 
 def predict_future_prices(model, future_dates):
     future_X = future_dates.values.reshape(-1, 1)
