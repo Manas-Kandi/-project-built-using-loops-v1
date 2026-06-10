@@ -1,5 +1,5 @@
 import argparse
-from .data_integration import integrate_real_time_data, integrate_historical_data, integrate_predictive_data
+from .data_integration import integrate_real_time_data, integrate_historical_data, integrate_predictive_analysis
 
 def main():
     parser = argparse.ArgumentParser(description="Stock Market Analyzer")
@@ -22,6 +22,25 @@ def main():
     predictive_parser.add_argument('--start_date', type=str, required=True, help='Start date in YYYY-MM-DD format')
     predictive_parser.add_argument('--end_date', type=str, required=True, help='End date in YYYY-MM-DD format')
     predictive_parser.set_defaults(func=integrate_predictive_data)
+
+    # Add more commands for different types of analyses
+    trend_parser = subparsers.add_parser('trend', help='Calculate trends in historical stock prices')
+    trend_parser.add_argument('--symbol', type=str, required=True, help='Stock symbol to analyze')
+    trend_parser.add_argument('--start_date', type=str, required=True, help='Start date in YYYY-MM-DD format')
+    trend_parser.add_argument('--end_date', type=str, required=True, help='End date in YYYY-MM-DD format')
+    trend_parser.set_defaults(func=lambda args: perform_historical_analysis(integrate_historical_data([args.symbol], pd.to_datetime(args.start_date), pd.to_datetime(args.end_date)))[args.symbol]['Trend'])
+
+    moving_average_parser = subparsers.add_parser('moving-average', help='Calculate moving averages for historical stock prices')
+    moving_average_parser.add_argument('--symbol', type=str, required=True, help='Stock symbol to analyze')
+    moving_average_parser.add_argument('--start_date', type=str, required=True, help='Start date in YYYY-MM-DD format')
+    moving_average_parser.add_argument('--end_date', type=str, required=True, help='End date in YYYY-MM-DD format')
+    moving_average_parser.set_defaults(func=lambda args: perform_historical_analysis(integrate_historical_data([args.symbol], pd.to_datetime(args.start_date), pd.to_datetime(args.end_date)))[args.symbol]['Moving Average'])
+
+    volume_parser = subparsers.add_parser('volume', help='Analyze stock volumes for historical data')
+    volume_parser.add_argument('--symbol', type=str, required=True, help='Stock symbol to analyze')
+    volume_parser.add_argument('--start_date', type=str, required=True, help='Start date in YYYY-MM-DD format')
+    volume_parser.add_argument('--end_date', type=str, required=True, help='End date in YYYY-MM-DD format')
+    volume_parser.set_defaults(func=lambda args: perform_historical_analysis(integrate_historical_data([args.symbol], pd.to_datetime(args.start_date), pd.to_datetime(args.end_date)))[args.symbol]['Volume Analysis'])
 
     args = parser.parse_args()
     result = args.func(**vars(args))
