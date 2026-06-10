@@ -1,1 +1,2 @@
-from .data_integration import integrate_real_time_data
+from .data_integration import integrate_real_time_data, integrate_historical_data, integrate_predictive_data
+from .user_interface import main
