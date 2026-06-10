@@ -13,7 +13,11 @@ def integrate_historical_data(symbols, start_date, end_date):
         # Placeholder for fetching historical data
         historical_prices[symbol] = pd.DataFrame({
             'Date': pd.date_range(start=start_date, end=end_date),
-            'Close': [100 + i * 5 for i in range((end_date - start_date).days)]
+            'Open': [100 + i * 5 for i in range((end_date - start_date).days)],
+            'High': [105 + i * 5 for i in range((end_date - start_date).days)],
+            'Low': [95 + i * 5 for i in range((end_date - start_date).days)],
+            'Close': [100 + i * 5 for i in range((end_date - start_date).days)],
+            'Volume': [1000000 + i * 100000 for i in range((end_date - start_date).days)]
         })
     
     return {symbol: perform_historical_analysis(price_data) for symbol, price_data in historical_prices.items()}
@@ -24,14 +28,18 @@ def integrate_predictive_data(symbols, start_date, end_date):
         # Placeholder for fetching historical data
         historical_prices = pd.DataFrame({
             'Date': pd.date_range(start=start_date, end=end_date),
-            'Close': [100 + i * 5 for i in range((end_date - start_date).days)]
+            'Open': [100 + i * 5 for i in range((end_date - start_date).days)],
+            'High': [105 + i * 5 for i in range((end_date - start_date).days)],
+            'Low': [95 + i * 5 for i in range((end_date - start_date).days)],
+            'Close': [100 + i * 5 for i in range((end_date - start_date).days)],
+            'Volume': [1000000 + i * 100000 for i in range((end_date - start_date).days)]
         })
         
         future_dates = pd.date_range(end=end_date, periods=30, closed='right')
         predictive_data = perform_predictive_analysis(historical_prices, future_dates)
         predictive_prices[symbol] = {
-            'Predicted Prices': predictive_data['Predicted Prices'],
-            'Model': predictive_data['Model']
+            'Predicted Prices': predictive_data['Random Forest Model']['Predicted Prices'],
+            'Model': predictive_data['Random Forest Model']
         }
     
     return predictive_prices
