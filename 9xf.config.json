@@ -1,0 +1,11 @@
+{
+  "model": "ollama/qwen2.5-coder:7b",
+  "endpoint": "http://localhost:11434",
+  "max_iterations": 50,
+  "delay_seconds": 5,
+  "validation_timeout": 10,
+  "allow_network": false,
+  "context_char_budget": 24000,
+  "history_entries_in_context": 15,
+  "api_key_env": "ANTHROPIC_API_KEY"
+}
