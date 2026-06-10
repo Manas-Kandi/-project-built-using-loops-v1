@@ -1,4 +1,5 @@
 import argparse
+import matplotlib.pyplot as plt
 
 def main_menu():
     print("Stock Market Analyzer")
@@ -8,12 +9,23 @@ def main_menu():
     print("4. Calculate Trends in Historical Stock Prices")
     print("5. Calculate Moving Averages for Historical Stock Prices")
     print("6. Analyze Stock Volumes for Historical Data")
-    print("7. Exit")
+    print("7. Visualize Real-time Stock Prices")
+    print("8. Exit")
 
 def integrate_real_time_data():
     symbols = ['AAPL', 'GOOGL', 'MSFT']
     prices = {symbol: get_real_time_stock_price(symbol) for symbol in symbols}
     return prices
+
+def plot_real_time_prices(prices):
+    plt.figure(figsize=(10, 5))
+    for symbol, price in prices.items():
+        plt.plot(price, label=symbol)
+    plt.title('Real-time Stock Prices')
+    plt.xlabel('Time')
+    plt.ylabel('Price')
+    plt.legend()
+    plt.show()
 
 def integrate_historical_data(symbols, start_date, end_date):
     historical_prices = {}
@@ -78,7 +90,7 @@ def analyze_volume(data):
 if __name__ == "__main__":
     while True:
         main_menu()
-        choice = input("Enter your choice (1-7): ")
+        choice = input("Enter your choice (1-8): ")
         
         if choice == '1':
             real_time_prices = integrate_real_time_data()
@@ -122,6 +134,10 @@ if __name__ == "__main__":
                 print(f"Volume Analysis for {symbol}:")
                 print(volume_analysis)
         elif choice == '7':
+            symbols = input("Enter stock symbols separated by commas: ").split(',')
+            real_time_prices = integrate_real_time_data()
+            plot_real_time_prices(real_time_prices)
+        elif choice == '8':
             break
         else:
             print("Invalid choice. Please try again.")
