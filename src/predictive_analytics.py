@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, StackingRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error
 
@@ -41,6 +41,10 @@ def train_neural_network(X, y):
     }
     grid_search = GridSearchCV(MLPRegressor(random_state=42), param_grid, cv=3)
     return grid_search.fit(X, y)
+
+def train_stacking_regressor(models):
+    stack_model = StackingRegressor(estimators=models, final_estimator=RandomForestRegressor())
+    return stack_model.fit(X, y)
 
 def predict_future_prices(model, future_dates):
     future_X = future_dates.values.reshape(-1, 1)
